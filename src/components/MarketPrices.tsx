@@ -132,7 +132,7 @@ const MarketPrices = () => {
           </CardContent>
         </Card>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardContent className="p-4">
               <h4 className="font-medium mb-2">Major Markets</h4>
@@ -151,21 +151,6 @@ const MarketPrices = () => {
               <p className="text-gray-700">
                 Overall crop prices have increased by 1.8% in the last week, with rice and soybean showing the strongest gains.
               </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <h4 className="font-medium mb-2">Market Updates</h4>
-              <p className="text-gray-700">
-                Get daily price notifications for your preferred crops directly on your phone or email.
-              </p>
-              <a 
-                href="#market-prices" 
-                className="text-agri-orange-500 hover:text-agri-orange-800 mt-2 inline-block"
-              >
-                Set up notifications
-              </a>
             </CardContent>
           </Card>
         </div>

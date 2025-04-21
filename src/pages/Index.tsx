@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -7,6 +6,7 @@ import CropSuggestion from "@/components/CropSuggestion";
 import MarketPrices from "@/components/MarketPrices";
 import GovSchemes from "@/components/GovSchemes";
 import Footer from "@/components/Footer";
+import FarmerChatbot from "@/components/FarmerChatbot";
 
 const Index = () => {
   return (
@@ -21,6 +21,7 @@ const Index = () => {
         <GovSchemes />
       </main>
       <Footer />
+      <FarmerChatbot />
     </div>
   );
 };

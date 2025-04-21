@@ -2238,7 +2238,9 @@ const CropSuggestion = () => {
               
               <div className="mt-6 text-center">
                 <a 
-                  href="/crop-suggestions" 
+                  href="https://farmer.gov.in/FarmerHome.aspx" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-agri-green-700 hover:text-agri-green-800 inline-flex items-center gap-1"
                 >
                   View detailed crop analysis

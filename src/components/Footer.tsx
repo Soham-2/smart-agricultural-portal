@@ -1,11 +1,17 @@
-
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center mb-4">
               <div className="h-8 w-8 bg-agri-green-500 rounded-full flex items-center justify-center mr-2">
@@ -40,30 +46,20 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-white uppercase tracking-wider mb-4">Features</h3>
             <ul className="space-y-2">
-              <li><Link to="/crop-suggestions" className="text-gray-400 hover:text-white">Crop Suggestions</Link></li>
-              <li><Link to="/weather" className="text-gray-400 hover:text-white">Weather Forecasts</Link></li>
-              <li><Link to="/market-prices" className="text-gray-400 hover:text-white">Market Prices</Link></li>
-              <li><Link to="/gov-schemes" className="text-gray-400 hover:text-white">Government Schemes</Link></li>
+              <li><button onClick={() => scrollToSection('crop-suggestions')} className="text-gray-400 hover:text-white">Crop Suggestions</button></li>
+              <li><button onClick={() => scrollToSection('weather')} className="text-gray-400 hover:text-white">Weather Forecasts</button></li>
+              <li><button onClick={() => scrollToSection('market-prices')} className="text-gray-400 hover:text-white">Market Prices</button></li>
+              <li><button onClick={() => scrollToSection('gov-schemes')} className="text-gray-400 hover:text-white">Government Schemes</button></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-semibold text-white uppercase tracking-wider mb-4">Resources</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white">Agriculture Guides</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Farming Techniques</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Crop Calendar</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Success Stories</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-white uppercase tracking-wider mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white">Help Center</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Contact Us</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white">Terms of Service</a></li>
+              <li><a href="https://smallfarms.cornell.edu/resources/guides/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">Agriculture Guides</a></li>
+              <li><a href="https://www.sare.org/resources/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">Farming Techniques</a></li>
+              <li><a href="https://ipad.fas.usda.gov/ogamaps/cropcalendar.aspx" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">Crop Calendar</a></li>
+              <li><a href="https://www.agrifarming.in/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">Success Stories</a></li>
             </ul>
           </div>
         </div>

@@ -199,7 +199,9 @@ const WeatherSection = () => {
 
         <div className="text-center mt-8">
           <a 
-            href="/weather" 
+            href="https://www.accuweather.com/en/in/india-weather" 
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-agri-blue-500 hover:text-agri-blue-800 inline-flex items-center gap-1"
           >
             View detailed weather information
