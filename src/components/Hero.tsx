@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
@@ -20,7 +19,10 @@ const Hero = () => {
               <Button size="lg" className="bg-white text-agri-green-700 hover:bg-green-50">
                 Get Started
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button 
+                size="lg" 
+                className="bg-transparent border-2 border-white text-white hover:bg-white/20"
+              >
                 Learn More
               </Button>
             </div>

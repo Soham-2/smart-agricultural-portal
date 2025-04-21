@@ -1,19 +1,52 @@
-
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Loader2, RefreshCw } from "lucide-react";
+import { fetchCropPrices, type CropPrice } from "@/services/marketService";
 
 const MarketPrices = () => {
-  // Mock market price data
-  const marketData = [
-    { crop: "Rice", variety: "Basmati", pricePerQuintal: "₹3,800", change: "+2.5%", trend: "up" },
-    { crop: "Wheat", variety: "Durum", pricePerQuintal: "₹2,150", change: "-1.2%", trend: "down" },
-    { crop: "Maize", variety: "Yellow", pricePerQuintal: "₹1,950", change: "+0.8%", trend: "up" },
-    { crop: "Soybean", variety: "Regular", pricePerQuintal: "₹4,200", change: "+3.7%", trend: "up" },
-    { crop: "Cotton", variety: "Long Staple", pricePerQuintal: "₹6,500", change: "-0.5%", trend: "down" },
-  ];
+  const [marketData, setMarketData] = useState<CropPrice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<string>("");
+
+  useEffect(() => {
+    fetchMarketPrices();
+  }, []);
+
+  const fetchMarketPrices = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Fetch data from our service
+      const data = await fetchCropPrices();
+      
+      if (data && data.length > 0) {
+        setMarketData(data);
+        
+        // Set last updated time
+        const now = new Date();
+        setLastUpdated(now.toLocaleTimeString());
+      } else {
+        throw new Error("No data received from API");
+      }
+    } catch (err) {
+      console.error("Failed to fetch market prices:", err);
+      setError("Unable to load real-time prices. Showing cached data instead.");
+      
+      // Still show whatever data we have, even if there was an error
+      if (marketData.length === 0) {
+        const fallbackData = await fetchCropPrices();
+        setMarketData(fallbackData);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <section className="py-16 bg-white">
+    <section id="market-prices" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Market Price Updates</h2>
@@ -26,42 +59,76 @@ const MarketPrices = () => {
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold">Current Crop Prices</h3>
-              <p className="text-sm text-gray-500">Last updated: Today, 9:30 AM</p>
+              
+              <div className="flex items-center">
+                {error && (
+                  <span className="text-amber-600 mr-2 text-sm hidden md:inline">
+                    {error}
+                  </span>
+                )}
+                
+                <button 
+                  onClick={fetchMarketPrices}
+                  disabled={loading}
+                  className="p-2 text-agri-orange-500 hover:text-agri-orange-700 transition-colors"
+                  title="Refresh prices"
+                >
+                  <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+                
+                {lastUpdated && !loading && (
+                  <span className="text-sm text-gray-500 ml-2 hidden md:inline">
+                    Last updated: {lastUpdated}
+                  </span>
+                )}
+              </div>
             </div>
             
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Crop</TableHead>
-                    <TableHead>Variety</TableHead>
-                    <TableHead>Price (per quintal)</TableHead>
-                    <TableHead>24h Change</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {marketData.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{item.crop}</TableCell>
-                      <TableCell>{item.variety}</TableCell>
-                      <TableCell>{item.pricePerQuintal}</TableCell>
-                      <TableCell className={item.trend === "up" ? "text-green-600" : "text-red-600"}>
-                        {item.change}
-                        {item.trend === "up" ? (
-                          <svg className="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
-                          </svg>
-                        ) : (
-                          <svg className="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                          </svg>
-                        )}
-                      </TableCell>
+            {loading && marketData.length === 0 ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-agri-orange-500" />
+                <span className="ml-2 text-lg text-gray-600">Loading prices...</span>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Crop</TableHead>
+                      <TableHead>Variety</TableHead>
+                      <TableHead>Price (per quintal)</TableHead>
+                      <TableHead>Market</TableHead>
+                      <TableHead>State</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {marketData.length > 0 ? (
+                      marketData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{item.crop}</TableCell>
+                          <TableCell>{item.variety}</TableCell>
+                          <TableCell>{item.pricePerQuintal}</TableCell>
+                          <TableCell>{item.market}</TableCell>
+                          <TableCell>{item.state}</TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                          No price data available at the moment. Please try again later.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+            
+            {error && marketData.length > 0 && (
+              <div className="mt-4 text-center md:hidden">
+                <p className="text-amber-600 text-sm">{error}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         
@@ -94,7 +161,7 @@ const MarketPrices = () => {
                 Get daily price notifications for your preferred crops directly on your phone or email.
               </p>
               <a 
-                href="/market-prices" 
+                href="#market-prices" 
                 className="text-agri-orange-500 hover:text-agri-orange-800 mt-2 inline-block"
               >
                 Set up notifications

@@ -1,10 +1,10 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
 
 const GovSchemes = () => {
-  // Mock government schemes data
+  // Mock government schemes data with official website URLs
   const schemes = [
     {
       title: "PM-KISAN",
@@ -12,6 +12,7 @@ const GovSchemes = () => {
       deadline: "Applications open year-round",
       category: "Financial Support",
       isNew: true,
+      url: "https://pmkisan.gov.in/"
     },
     {
       title: "Soil Health Card Scheme",
@@ -19,6 +20,7 @@ const GovSchemes = () => {
       deadline: "Seasonal registrations",
       category: "Resource Management",
       isNew: false,
+      url: "https://soilhealth.dac.gov.in/"
     },
     {
       title: "Pradhan Mantri Fasal Bima Yojana",
@@ -26,11 +28,36 @@ const GovSchemes = () => {
       deadline: "Before crop sowing season",
       category: "Insurance",
       isNew: true,
+      url: "https://pmfby.gov.in/"
     },
+    {
+      title: "National Mission for Sustainable Agriculture",
+      description: "Promotes sustainable agriculture practices and efficient use of water through micro irrigation techniques.",
+      deadline: "Ongoing",
+      category: "Sustainability",
+      isNew: false,
+      url: "https://nmsa.dac.gov.in/"
+    },
+    {
+      title: "Kisan Credit Card",
+      description: "Provides farmers with affordable credit for their agricultural operations and other needs.",
+      deadline: "Applications open year-round",
+      category: "Financial Support",
+      isNew: false,
+      url: "https://www.India.gov.in/spotlight/kisan-credit-card-scheme"
+    },
+    {
+      title: "Pradhan Mantri Krishi Sinchai Yojana",
+      description: "Enhances water efficiency through 'Per Drop More Crop' and improves farm irrigation systems.",
+      deadline: "Ongoing",
+      category: "Irrigation",
+      isNew: true,
+      url: "https://pmksy.gov.in/"
+    }
   ];
 
   return (
-    <section className="py-16 bg-agri-brown-100/30">
+    <section id="gov-schemes" className="py-16 bg-agri-brown-100/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Government Schemes</h2>
@@ -39,7 +66,7 @@ const GovSchemes = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {schemes.map((scheme, index) => (
             <Card key={index} className="h-full flex flex-col">
               <CardHeader>
@@ -58,32 +85,19 @@ const GovSchemes = () => {
                 <div className="text-sm text-gray-500 mb-4">
                   <span className="font-medium">Deadline:</span> {scheme.deadline}
                 </div>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-agri-brown-500 text-agri-brown-700 hover:bg-agri-brown-500 hover:text-white"
-                >
-                  View Details
-                </Button>
+                <a href={scheme.url} target="_blank" rel="noopener noreferrer" className="block w-full">
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-agri-brown-500 text-agri-brown-700 hover:bg-agri-brown-500 hover:text-white flex items-center justify-center gap-2"
+                  >
+                    View Details
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </a>
               </CardContent>
             </Card>
           ))}
         </div>
-
-        <Card className="border-t-4 border-t-agri-brown-500">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-6 items-center">
-              <div className="flex-grow">
-                <h3 className="text-xl font-semibold mb-2">Stay Notified</h3>
-                <p className="text-gray-600">
-                  Receive timely updates about new government schemes, deadlines, and eligibility criteria directly on your device.
-                </p>
-              </div>
-              <Button className="bg-agri-brown-500 hover:bg-agri-brown-600 whitespace-nowrap">
-                Subscribe to Alerts
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </section>
   );
