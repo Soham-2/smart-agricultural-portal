@@ -1,16 +1,43 @@
 
-import { CloudRain, CloudSun } from "lucide-react";
+import { CloudRain, CloudSun, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { getWeatherData, getCityCoordinates, type WeatherData } from "@/services/weatherService";
+import { toast } from "@/components/ui/sonner";
 
 const WeatherSection = () => {
-  // Mock weather data
-  const weatherData = [
-    { day: "Mon", temp: "32°C", condition: "Sunny", icon: <CloudSun className="h-8 w-8 text-agri-orange-500" /> },
-    { day: "Tue", temp: "30°C", condition: "Sunny", icon: <CloudSun className="h-8 w-8 text-agri-orange-500" /> },
-    { day: "Wed", temp: "28°C", condition: "Cloudy", icon: <CloudSun className="h-8 w-8 text-gray-400" /> },
-    { day: "Thu", temp: "25°C", condition: "Rainy", icon: <CloudRain className="h-8 w-8 text-agri-blue-500" /> },
-    { day: "Fri", temp: "27°C", condition: "Cloudy", icon: <CloudSun className="h-8 w-8 text-gray-400" /> },
-  ];
+  const [city, setCity] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [location, setLocation] = useState<{ name: string; country: string } | null>(null);
+
+  const handleSearch = async () => {
+    if (!city.trim()) return;
+    
+    setLoading(true);
+    try {
+      const coords = await getCityCoordinates(city);
+      const weather = await getWeatherData(coords.lat, coords.lon);
+      setWeatherData(weather);
+      setLocation({ name: coords.name, country: coords.country });
+      setCity("");
+    } catch (error) {
+      toast.error("Failed to fetch weather data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getWeatherIcon = (condition: string) => {
+    switch (condition.toLowerCase()) {
+      case 'rain':
+        return <CloudRain className="h-8 w-8 text-agri-blue-500" />;
+      default:
+        return <CloudSun className="h-8 w-8 text-agri-orange-500" />;
+    }
+  };
 
   return (
     <section className="py-16 bg-white">
@@ -22,47 +49,76 @@ const WeatherSection = () => {
           </p>
         </div>
 
-        <Card className="overflow-hidden border-t-4 border-t-agri-blue-500 mb-8">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900">New Delhi, India</h3>
-                <p className="text-gray-500">Current Location</p>
-              </div>
-              <div className="text-right">
-                <div className="text-4xl font-bold text-gray-900">32°C</div>
-                <p className="text-gray-500">Feels like 34°C</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 mb-6">
-              <CloudSun className="h-14 w-14 text-agri-orange-500" />
-              <div>
-                <div className="text-xl font-medium">Sunny</div>
-                <p className="text-gray-500">Wind: 10 km/h | Humidity: 65%</p>
-              </div>
-            </div>
-
-            <div className="text-sm text-gray-500">
-              Updated: Today, 2:30 PM
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {weatherData.map((day, index) => (
-            <Card key={index} className="text-center">
-              <CardContent className="p-4">
-                <div className="font-medium text-lg mb-2">{day.day}</div>
-                <div className="mb-2 flex justify-center">
-                  {day.icon}
-                </div>
-                <div className="font-bold text-xl mb-1">{day.temp}</div>
-                <div className="text-gray-500 text-sm">{day.condition}</div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex gap-4 mb-8 max-w-md mx-auto">
+          <Input
+            placeholder="Enter city name"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          <Button 
+            onClick={handleSearch}
+            disabled={loading}
+            className="bg-agri-blue-500 hover:bg-agri-blue-600"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
         </div>
+
+        {weatherData && location && (
+          <Card className="overflow-hidden border-t-4 border-t-agri-blue-500 mb-8">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">{location.name}, {location.country}</h3>
+                  <p className="text-gray-500">Current Location</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-gray-900">
+                    {Math.round(weatherData.current.temp)}°C
+                  </div>
+                  <p className="text-gray-500">
+                    Feels like {Math.round(weatherData.current.feels_like)}°C
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4 mb-6">
+                {getWeatherIcon(weatherData.current.weather[0].main)}
+                <div>
+                  <div className="text-xl font-medium">{weatherData.current.weather[0].main}</div>
+                  <p className="text-gray-500">
+                    Wind: {Math.round(weatherData.current.wind_speed)} km/h | 
+                    Humidity: {weatherData.current.humidity}%
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {weatherData && (
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {weatherData.daily.slice(1, 6).map((day, index) => (
+              <Card key={index} className="text-center">
+                <CardContent className="p-4">
+                  <div className="font-medium text-lg mb-2">
+                    {new Date(day.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}
+                  </div>
+                  <div className="mb-2 flex justify-center">
+                    {getWeatherIcon(day.weather[0].main)}
+                  </div>
+                  <div className="font-bold text-xl mb-1">
+                    {Math.round(day.temp.day)}°C
+                  </div>
+                  <div className="text-gray-500 text-sm">
+                    {day.weather[0].main}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-8">
           <a 
