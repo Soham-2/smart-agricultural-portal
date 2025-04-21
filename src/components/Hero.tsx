@@ -15,17 +15,6 @@ const Hero = () => {
               schemes - all in one centralized platform designed to bridge the gap between 
               technology and agriculture.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="bg-white text-agri-green-700 hover:bg-green-50">
-                Get Started
-              </Button>
-              <Button 
-                size="lg" 
-                className="bg-transparent border-2 border-white text-white hover:bg-white/20"
-              >
-                Learn More
-              </Button>
-            </div>
           </div>
           <div className="hidden md:block relative">
             <div className="aspect-square max-w-md relative mx-auto">

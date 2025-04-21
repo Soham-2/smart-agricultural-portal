@@ -19,7 +19,7 @@ const Footer = () => {
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
               </div>
-              <span className="font-bold text-xl text-white">FieldWise</span>
+              <span className="font-bold text-xl text-white">Smart Agricultural Portal</span>
             </div>
             <p className="text-gray-400 mb-4">
               Empowering farmers with digital tools and real-time agricultural information.
@@ -66,7 +66,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400">
-            &copy; {new Date().getFullYear()} FieldWise - Smart Agricultural Portal. All rights reserved.
+            &copy; {new Date().getFullYear()} Smart Agricultural Portal. All rights reserved.
           </p>
         </div>
       </div>
