@@ -3,28 +3,37 @@ import { LeafIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 const CropSuggestion = () => {
   const [soilType, setSoilType] = useState("");
-  const [location, setLocation] = useState("");
+  const [country, setCountry] = useState("");
   const [suggestions, setSuggestions] = useState<null | string[]>(null);
 
   // Mock function to suggest crops
   const suggestCrops = () => {
-    if (!soilType || !location) return;
+    if (!soilType || !country) return;
 
     // This would come from an API in a real application
     const mockSuggestions = {
-      "Clay": ["Rice", "Wheat", "Oats", "Cabbage", "Broccoli"],
-      "Sandy": ["Potatoes", "Carrots", "Lettuce", "Strawberries", "Melons"],
-      "Silt": ["Tomatoes", "Peppers", "Cabbage", "Beans", "Peas"],
-      "Loam": ["Corn", "Soybeans", "Wheat", "Sunflowers", "Cotton"],
+      "India": {
+        "Clay": ["Rice", "Wheat", "Oats", "Cabbage", "Broccoli"],
+        "Sandy": ["Potatoes", "Groundnuts", "Millets", "Bajra"],
+        "Silt": ["Tomatoes", "Sugarcane", "Cotton", "Chili"],
+        "Loam": ["Corn", "Soybeans", "Wheat", "Sunflowers"],
+      },
+      "United States": {
+        "Clay": ["Corn", "Wheat", "Soybeans"],
+        "Sandy": ["Peanuts", "Rye", "Cotton"],
+        "Silt": ["Tobacco", "Tomatoes", "Rice"],
+        "Loam": ["Corn", "Soybeans", "Wheat", "Sunflowers"],
+      },
+      // Add more countries as needed
     };
 
     // @ts-ignore - Mock data structure
-    setSuggestions(mockSuggestions[soilType] || ["Wheat", "Rice", "Corn"]);
+    const countryCrops = mockSuggestions[country] || {};
+    setSuggestions(countryCrops[soilType] || ["Wheat", "Rice", "Corn"]);
   };
 
   return (
@@ -33,7 +42,7 @@ const CropSuggestion = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Crop Suggestion System</h2>
           <p className="max-w-2xl mx-auto text-lg text-gray-600">
-            Get personalized crop recommendations based on your soil type, local weather conditions, and geographical location.
+            Get personalized crop recommendations based on your soil type, local climate conditions, and country.
           </p>
         </div>
 
@@ -65,13 +74,18 @@ const CropSuggestion = () => {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location
+                    Country
                   </label>
-                  <Input
-                    placeholder="Enter your location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
+                  <Select value={country} onValueChange={setCountry}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="India">India</SelectItem>
+                      <SelectItem value="United States">United States</SelectItem>
+                      {/* Add more countries as needed */}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <Button 
