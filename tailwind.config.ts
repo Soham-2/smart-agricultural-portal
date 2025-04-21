@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,33 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Agricultural theme colors
+				agri: {
+					'green-100': '#E7F3DC',
+					'green-200': '#C3E5A9',
+					'green-300': '#A1D880',
+					'green-400': '#7DCB58',
+					'green-500': '#5BBF30',
+					'green-600': '#4A9D28',
+					'green-700': '#387B20',
+					'green-800': '#275818',
+					'green-900': '#153410',
+					'brown-100': '#F5EFE6',
+					'brown-200': '#E6D8C4',
+					'brown-300': '#D7C1A3',
+					'brown-400': '#C8AA81',
+					'brown-500': '#B9935F',
+					'brown-600': '#9A774C',
+					'brown-700': '#7B5C39',
+					'brown-800': '#5C4026',
+					'brown-900': '#3D2513',
+					'blue-100': '#E1F5FE',
+					'blue-500': '#2196F3',
+					'blue-800': '#0D47A1',
+					'orange-100': '#FFF3E0',
+					'orange-500': '#FF9800',
+					'orange-800': '#E65100',
 				}
 			},
 			borderRadius: {
@@ -84,11 +112,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'slide-up': {
+					'0%': { transform: 'translateY(20px)', opacity: '0' },
+					'100%': { transform: 'translateY(0)', opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'slide-up': 'slide-up 0.5s ease-out'
 			}
 		}
 	},
